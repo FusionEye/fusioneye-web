@@ -20,3 +20,17 @@ export function close() {
     method: 'get'
   })
 }
+
+export function download(filename) {
+  return request({
+    url: '/ros/download/' + filename,
+    method: 'get'
+  })
+}
+
+export function deleteFile(filename) {
+  return request({
+    url: '/ros/delete/' + filename,
+    method: 'get'
+  })
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" :placeholder="$t('pyCase.caseName')" v-model="listQuery.caseName"></el-input>
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" :placeholder="$t('ros.fileName')" v-model="listQuery.caseName"></el-input>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{$t('table.search')}}</el-button>
       <el-button class="filter-item" :loading="codeSyncing" type="primary" icon="el-icon-refresh" @click="handleRecord">{{$t('ros.recordBtn')}}</el-button>
       <el-button class="filter-item" type="primary" icon="el-icon-view" @click="handleClose">{{$t('ros.closeBtn')}}</el-button>
@@ -9,16 +9,16 @@
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" stripe element-loading-text="给我一点时间" border fit highlight-current-row
               style="width: 100%" @selection-change="handleSelectionChange" >
-      <el-table-column
+      <!-- <el-table-column
         type="selection"
         width="55">
-      </el-table-column>
-              <el-table-column align="center" type="index" label="No" width="85">
+      </el-table-column> -->
+        <el-table-column align="center" type="index" label="No" width="85">
           <template slot-scope="scope">
             {{scope.$index}}
           </template>
         </el-table-column>
-      <el-table-column align="center" :label="$t('ros.fileName')" width="600">
+      <el-table-column align="center" :label="$t('ros.fileName')" width="420">
         <template slot-scope="scope">
           <span>{{scope.row.fileName}}</span>
         </template>
@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column align="center" :label="$t('ros.size')" width="250">
         <template slot-scope="scope">
-          <span>{{scope.row.size}}</span>
+          <span>{{scope.row.size}}M</span>
         </template>
       </el-table-column>
       <el-table-column align="center" :label="$t('ros.createTime')" width="250">
@@ -55,7 +55,7 @@
 </style>
 
 <script>
-  import { record, close, fetchBagList } from '@/api/ros'
+  import { record, close, fetchBagList, download, deleteFile } from '@/api/ros'
   // import waves from '@/directive/waves' // 水波纹指令
 
   export default {
@@ -118,20 +118,19 @@
       handleRecord() {
         this.codeSyncing = true
         record().then(response => {
-          this.codeSyncing = false
-          if (response.data.success) {
-            this.$message.success('同步完成')
-          } else {
-            this.$message.error('错了哦，失败 \n ' + response.data.message)
-          }
         })
+        // 延时恢复
+        setInterval(() => {
+          this.codeSyncing = false
+          this.$message.success('录制开始，请等待')
+        }, 3000)
       },
       handleClose() {
         this.codeSyncing = true
         close().then(response => {
           this.codeSyncing = false
           if (response.data.success) {
-            this.$message.success('同步完成')
+            this.$message.success('停机完成')
           } else {
             this.$message.error('错了哦，失败 \n ' + response.data.message)
           }
@@ -150,14 +149,32 @@
       },
       handleDownload(index, row) {
         this.$set(row, 'running', true)
-        // TODO download
+        download(row.fileName).then(response => {
+          const blob = new Blob([response.data], { type: 'application/octet-stream' })
+          const link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = row.fileName
+          link.click()
+        })
         // 延时恢复
         setInterval(() => {
           this.$set(row, 'running', false)
         }, 3000)
       },
       handleDelete(index, row) {
-
+        this.$set(row, 'running', true)
+        deleteFile(row.fileName).then(response => {
+          if (response.data.success) {
+            this.$message.success('删除完成')
+          } else {
+            this.$message.error('错了哦，失败 \n ' + response.data.message)
+          }
+          this.getList()
+        })
+        // 延时恢复
+        setInterval(() => {
+          this.$set(row, 'running', false)
+        }, 3000)
       }
     }
   }
