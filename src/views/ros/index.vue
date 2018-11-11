@@ -122,8 +122,8 @@
         // 延时恢复
         setInterval(() => {
           this.codeSyncing = false
-          this.$message.success('录制开始，请等待')
         }, 3000)
+        this.$message.success('录制开始，请等待')
       },
       handleClose() {
         this.codeSyncing = true
