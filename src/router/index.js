@@ -61,6 +61,18 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/octree',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'octree',
+        component: () => import('@/views/octree/index'),
+        meta: { title: 'Octree Viewer', icon: 'table' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
