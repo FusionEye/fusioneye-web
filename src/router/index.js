@@ -62,6 +62,18 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/combine',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'combine',
+        component: () => import('@/views/combine/index'),
+        meta: { title: 'Combine Output', icon: 'table' }
+      }
+    ]
+  },
+  {
     path: '/octree',
     component: Layout,
     children: [

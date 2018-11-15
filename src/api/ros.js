@@ -34,3 +34,14 @@ export function deleteFile(filename) {
     method: 'get'
   })
 }
+
+export function colorPcd(formData) {
+  return request({
+    url: '/ros/color_pcd',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: formData
+  })
+}

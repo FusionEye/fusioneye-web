@@ -7,44 +7,46 @@
       <el-button class="filter-item" type="primary" icon="el-icon-view" @click="handleClose">{{$t('ros.closeBtn')}}</el-button>
     </div>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" stripe element-loading-text="给我一点时间" border fit highlight-current-row
-              style="width: 100%" @selection-change="handleSelectionChange" >
-      <!-- <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column> -->
-        <el-table-column align="center" type="index" label="No" width="85">
+    <el-container style="width: 100%">
+      <el-table :key='tableKey' :data="list" v-loading="listLoading" stripe element-loading-text="给我一点时间" border fit highlight-current-row
+                style="width: 100%" @selection-change="handleSelectionChange" >
+        <!-- <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column> -->
+          <el-table-column align="center" type="index" label="No" min-width="5%">
+            <template slot-scope="scope">
+              {{scope.$index}}
+            </template>
+          </el-table-column>
+        <el-table-column align="center" :label="$t('ros.fileName')">
           <template slot-scope="scope">
-            {{scope.$index}}
+            <span>{{scope.row.fileName}}</span>
           </template>
         </el-table-column>
-      <el-table-column align="center" :label="$t('ros.fileName')" width="420">
-        <template slot-scope="scope">
-          <span>{{scope.row.fileName}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('ros.path')" width="250" v-if="false">
-        <template slot-scope="scope">
-          <span>{{scope.row.path}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('ros.size')" width="250">
-        <template slot-scope="scope">
-          <span>{{scope.row.size}}M</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('ros.createTime')" width="250">
-        <template slot-scope="scope">
-          <span>{{scope.row.createTime}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('ros.actions')" width="350" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleDownload(scope.$index, scope.row)">{{$t('ros.downloadBtn')}}</el-button>
-          <el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row)">{{$t('ros.deleteBtn')}}</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-table-column align="center" :label="$t('ros.path')" v-if="false">
+          <template slot-scope="scope">
+            <span>{{scope.row.path}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" :label="$t('ros.size')" >
+          <template slot-scope="scope">
+            <span>{{scope.row.size}}M</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" :label="$t('ros.createTime')" >
+          <template slot-scope="scope">
+            <span>{{scope.row.createTime}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" :label="$t('ros.actions')" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="handleDownload(scope.$index, scope.row)">{{$t('ros.downloadBtn')}}</el-button>
+            <el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row)">{{$t('ros.deleteBtn')}}</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-container>
   </div>
 </template>
 
