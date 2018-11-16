@@ -48,7 +48,7 @@ export default {
       this.dialogVisible = true
     },
     beforeRemove(file, fileList) {
-      return this.$confirm('确定移除 ${file.name}？')
+      return this.$confirm(`确定移除 ${file.name}？`)
     },
     OnChange(file, fileList) {
       this.fileList = fileList
@@ -75,7 +75,7 @@ export default {
 
       for (let i = 0; i < this.fileList.length; i++) {
         const file = this.fileList[i]
-        const type = this.checkFileType(file)
+        const type = this.getFileType(file)
         this.param.append(type, this.fileList[i].raw)
       }
 
@@ -83,7 +83,7 @@ export default {
       colorPcd(this.param).then(res => {
         this.uploadLoading = true
         this.$message.success('开始处理，请等待')
-        alert(res)
+
         if (res.data === 1) {
           this.uploadLoading = false
         }
